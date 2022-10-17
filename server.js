@@ -9,7 +9,7 @@ const authRoute = require("./routes/authRoute")
 app.use(express.urlencoded({extended: true}))
 app.use("/", authRoute)
 app.get("/test", (req, res) => {
-    res.json({ msg: "About to make heroku work" })
+    res.json({ msg: "Stop trying to get access the wrong way" })
 })
 
 dbconnection.startConnection(app.listen(port))

@@ -1,6 +1,6 @@
 const { json } = require("express")
 const User = require("../models/user")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 

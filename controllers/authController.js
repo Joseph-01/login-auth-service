@@ -3,13 +3,100 @@ const User = require("../models/user")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - firstname
+ *         - lastname
+ *         - email
+ *         - password
+ *         - username
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the post
+ *         firstname:
+ *           type: string
+ *         lastname:
+ *           type: stringe
+ *         profilePic:
+ *           type: string
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *         phoneNumber:
+ *           type: string
+ *         email:
+ *           type: string
+ *         followers:
+ *           type: array
+ *         followings:
+ *           type: array
+ *         isAdmin:
+ *           type: boolean
+ *         slug:
+ *           type: string
+ *       example:
+ *         firstname: John
+ *         lastname: Doe
+ *         profilePic: 
+ *         username: johndoe
+ *         password: 123456
+ *         phoneNumber: 08012345678
+ *         isAdmin: false
+ *         followers: []
+ *         followings: []
+ *         email: johndoe@gmail.com
+ *         slug:
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: The user authentication API
+*/
 
 
+/**
+ * @swagger
+ * /login:
+ *  post:
+ *    summary: login a user
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content: 
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required: 
+ *              - username
+ *              - password
+ *            properties:
+ *              username:
+ *                type: string
+ *              password:
+ *                type: string
+ *            example: 
+ *              username: joe
+ *              password: "123456"
+ *    responses:
+ *      200:
+ *        description: The user has succesfully logged in
+ *      404:
+ *        description: user not found
+ *    
+ */
 const login = async (req, res) => {
     try {
-        const { username, password, email } = req.body
+        const { username, password } = req.body
         const checkUser = await User.findOne({ username: username })
-        console.log(checkUser)
         if (checkUser === null) {
             res.status(404).json({ msg: "user not found" })
         } else {
@@ -27,6 +114,22 @@ const login = async (req, res) => {
 }
 
 
+/**
+ * @swagger
+ * /auth:
+ *   get:
+ *     summary: Check the current user's token if valid
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: The user is authenticated
+ *       401:
+ *         description: The user is not authenticated
+ *       500:
+ *         description: Something went wrong
+ */
 const auth = async (req, res) => {
     try {
         const authorization = req.headers.authorization
@@ -44,15 +147,32 @@ const auth = async (req, res) => {
     }
 }
 
+
+/**
+ * @swagger
+ * /auth:
+ *   get:
+ *     summary: logout user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: This user is logged out
+ *       401:
+ *         description: The user is not authenticated
+ *       500:
+ *         description: Something went wrong
+ */
 const logout = async (req, res) => {
     try {
         const authorization = req.headers.authorization
         if (!authorization || !authorization.startsWith("Bearer ")) {
             return res.status(401).json({ msg: "No token given" });
+        } else {
+            const token = "";
+            res.status(200).json({ msg: "logout" })
         }
-
-        const token = authorization.split(" ")[1]
-        res.status(200).json({ msg: "logout" })
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
     }
@@ -60,5 +180,6 @@ const logout = async (req, res) => {
 
 module.exports = {
     login,
-    auth
+    auth,
+    logout
 }

@@ -3,6 +3,17 @@ const User = require("../models/user")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 /**
  * @swagger
  * components:
@@ -122,6 +133,12 @@ const login = async (req, res) => {
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *         required: true
  *     responses:
  *       200:
  *         description: The user is authenticated
@@ -150,12 +167,10 @@ const auth = async (req, res) => {
 
 /**
  * @swagger
- * /auth:
+ * /logout:
  *   get:
  *     summary: logout user
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: This user is logged out
@@ -166,13 +181,15 @@ const auth = async (req, res) => {
  */
 const logout = async (req, res) => {
     try {
-        const authorization = req.headers.authorization
-        if (!authorization || !authorization.startsWith("Bearer ")) {
-            return res.status(401).json({ msg: "No token given" });
-        } else {
-            const token = "";
-            res.status(200).json({ msg: "logout" })
-        }
+        // const authorization = req.headers.authorization
+        // if (!authorization || !authorization.startsWith("Bearer ")) {
+        //     return res.status(401).json({ msg: "No token given" });
+        // } else {
+        //     const token = authorization.split(" ")[1]
+        //     const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        //     // const token = "";
+            res.status(200).json({msg: "Since Jwt is stateless, logout has to be implemented on the front end" })
+        // }
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
     }
